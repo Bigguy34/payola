@@ -1,4 +1,5 @@
 <%
+  base_path = local_assigns.fetch :base_path, main_app.payola_path
   button_class = local_assigns.fetch :button_class, "stripe-button-el"
   button_inner_style = local_assigns.fetch :button_inner_style, 'min-height: 30px'
   button_text = local_assigns.fetch :button_text, "Subscribe Now"
@@ -39,7 +40,7 @@
   end
 
   raw_data = {
-    base_path: main_app.payola_path,
+    base_path: base_path,
     form_id: form_id,
     button_id: button_id,
     error_div_id: error_div_id,
