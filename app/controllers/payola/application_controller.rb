@@ -6,7 +6,7 @@ module Payola
 
     def return_to
       return params[:return_to] if params[:return_to]
-      request.headers["Referer"] or raise ActionController::RedirectBackError
+      request.headers["Referer"] or root_url
     end
 
   end

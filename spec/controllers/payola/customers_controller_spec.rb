@@ -72,11 +72,10 @@ module Payola
       it "should raise error when no referrer to redirect to" do
         request.env.delete("HTTP_REFERER")
 
-        expect do
-          post :update, params: {
-            id: customer.id, customer: { default_source: "1234" }
-          }
-        end.to raise_error(ActionController::RedirectBackError)
+        post :update, params: {
+          id: customer.id, customer: { default_source: "1234" }
+        }
+        expect(response).to redirect_to "/subdir/payola/events?action=index&controller=home"
       end
 
     end

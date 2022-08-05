@@ -10,6 +10,7 @@ module Payola
     describe "validations" do
       it "should validate" do
         sale = build(:sale)
+        sale.valid?
         expect(sale.valid?).to be true
       end
 

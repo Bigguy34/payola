@@ -63,7 +63,7 @@ module Payola
         StartSubscription.call(subscription)
         CancelSubscription.call(subscription)
 
-        subscription2 = create(:subscription, state: 'processing', plan: plan, owner: user)
+        subscription2 = create(:subscription, state: 'processing', plan: plan, owner: user, stripe_token: token)
         StartSubscription.call(subscription2)
         expect(subscription2.reload.stripe_customer_id).to_not be_nil
         expect(subscription2.reload.stripe_customer_id).to eq subscription.reload.stripe_customer_id
@@ -101,8 +101,7 @@ module Payola
         plan = create(:subscription_plan)
         subscription = create(:subscription, state: 'processing', plan: plan, stripe_token: token, owner: user, setup_fee: 100)
         StartSubscription.call(subscription)
-
-        ii = Stripe::InvoiceItem.all(customer: subscription.stripe_customer_id).first
+        ii = Stripe::InvoiceItem.list(customer: subscription.stripe_customer_id).first
         expect(ii).to_not be_nil
         expect(ii.amount).to eq 100
         expect(ii.description).to eq "Setup Fee"
@@ -115,7 +114,7 @@ module Payola
         expect(plan).to receive(:setup_fee_description).with(subscription).and_return('Random Mystery Fee')
         StartSubscription.call(subscription)
 
-        ii = Stripe::InvoiceItem.all(customer: subscription.stripe_customer_id).first
+        ii = Stripe::InvoiceItem.list(customer: subscription.stripe_customer_id).first
         expect(ii).to_not be_nil
         expect(ii.amount).to eq 100
         expect(ii.description).to eq 'Random Mystery Fee'

@@ -70,12 +70,11 @@ module Payola
       it "should raise error when no referrer to redirect to" do
         request.env.delete("HTTP_REFERER")
 
-        expect do
-          post :create, params: {
-            customer_id: customer.id,
-            stripeToken: StripeMock.generate_card_token({})
-          }
-        end.to raise_error(ActionController::RedirectBackError)
+        post :create, params: {
+          customer_id: customer.id,
+          stripeToken: StripeMock.generate_card_token({})
+        }
+        expect(response).to redirect_to "/subdir/payola/events?action=index&controller=home"
       end
     end
 
@@ -149,11 +148,10 @@ module Payola
       it "should raise error when no referrer to redirect to" do
         request.env.delete("HTTP_REFERER")
 
-        expect do
-          delete :destroy, params: {
-            id: customer.sources.first.id, customer_id: customer.id
-          }
-        end.to raise_error(ActionController::RedirectBackError)
+        delete :destroy, params: {
+          id: customer.sources.first.id, customer_id: customer.id
+        }
+        expect(response).to redirect_to "/subdir/payola/events?action=index&controller=home"
       end
 
     end
